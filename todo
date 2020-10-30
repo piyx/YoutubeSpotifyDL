@@ -1,0 +1,12 @@
+1. Get song name
+2. Search song on spotify
+3. Get song info (title, artist, image)
+4. Get youtube url of song
+5. Download song as mp4
+6. Convert mp4 to mp3 using ffmpeg
+7. Add ID3 tags
+
+Extras:
+
+1. Feature to download entire playlists
+2. Download saved tracks
