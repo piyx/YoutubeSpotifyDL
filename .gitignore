@@ -1,2 +1,3 @@
 music/
 .cache*
+__pycache__
