@@ -54,7 +54,7 @@ class SpotifyTracks:
         saved_tracks = []
         for track_data in results:
             song = clean_track_data(track_data)
-            saved_tracks
+            saved_tracks.append(song)
 
         return saved_tracks
 
