@@ -17,6 +17,8 @@ from spotipy.oauth2 import SpotifyOAuth
 DOWNLOAD_PATH = Path('music')
 SPACE = ' '*50
 
+INVALID_SYMBOLS = '''#<%>&*{}/\\$+!`'|=:@"'''
+
 
 class Song:
     def __init__(self, title, artist, album, image):
@@ -34,8 +36,8 @@ def spotify_setup():
         if token:
             spotify = Spotify(auth=token)
             return spotify
-    except:
-        raise SpotifyAuthenticationFailed
+    except Exception as e:
+        print(e)
 
 
 def get_song_info(data):
@@ -49,18 +51,20 @@ def get_song_info(data):
 
 def get_yt_url(song_name):
     # Replacing whitespace with '+' symbol
-    song_name = '+'.join(song_name.split())
+    song_name = '+'.join(song_name.split()).encode('utf-8')
     search_url = f"https://www.youtube.com/results?search_query={song_name}"
     try:
         html = urlopen(search_url).read().decode()
         video_ids = re.findall(r"watch\?v=(\S{11})", html)
         if video_ids:
             return f"https://www.youtube.com/watch?v={video_ids[0]}"
-    except:
-        raise YoutubeSongSearchError
+    except Exception as e:
+        print(e)
 
 
 def convert_to_mp3(rename):
+    rename = re.sub('''[#<%>&*{}/\\$+!`'|=:@"]''', '', rename)
+    print(rename)
     src = 'song.mp4'
     dest = 'song.mp3'
     final = rename + '.mp3'
@@ -80,13 +84,12 @@ def add_tags(song_path, song):
         tag.album = song.album
         tag.images.set(3, image, 'image/jpeg')
         tag.save(version=eyed3.id3.ID3_V2_3)
-    except:
-        raise ID3TagError
+    except Exception as e:
+        print(e)
 
 
 def download_song(song_name, song):
     if os.path.exists(song_name + '.mp3'):
-        print(f'{song_name} already exists')
         return True
     try:
         song_url = get_yt_url(song_name)
@@ -95,7 +98,8 @@ def download_song(song_name, song):
         song_path = convert_to_mp3(song_name)
         add_tags(song_path, song)
         return True
-    except:
+    except Exception as e:
+        print(e)
         if os.path.exists('song.mp3'):
             os.remove('song.mp3')
         return False
@@ -116,7 +120,7 @@ def download_tracks(tracks, foldername):
         if not status:
             print(f'Error downloading {name}')
 
-    print()
+    print(f'Download complete. {SPACE}')
 
 
 def main():
