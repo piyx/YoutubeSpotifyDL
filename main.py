@@ -2,8 +2,6 @@ from pytube import YouTube
 from spotipy import Spotify
 from spotipy.oauth2 import SpotifyOAuth
 from urllib.request import urlopen
-from mutagen.easyid3 import EasyID3
-from mutagen.id3 import APIC
 from pathlib import Path
 import re
 import os
