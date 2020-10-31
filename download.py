@@ -63,8 +63,6 @@ def get_yt_url(song_name):
 
 
 def convert_to_mp3(rename):
-    rename = re.sub('''[#<%>&*{}/\\$+!`'|=:@"]''', '', rename)
-    print(rename)
     src = 'song.mp4'
     dest = 'song.mp3'
     final = rename + '.mp3'
@@ -115,6 +113,7 @@ def download_tracks(tracks, foldername):
         track = tracks.popleft()
         song = get_song_info(track)
         name = f'{song.artist} - {song.title}'
+        name = re.sub('''[#<%>&*{}/\\$+!`'|=:@"]''', '', name)
         print(f'Downloading {name}..{SPACE}', end='\r')
         status = download_song(name, song)
         if not status:
@@ -129,6 +128,9 @@ def main():
     if not os.path.exists(DOWNLOAD_PATH):
         os.mkdir(DOWNLOAD_PATH)
     os.chdir(DOWNLOAD_PATH)
+
+    playlist_items = spotify.user_playlist()
+    print(playlist_items)
 
     results = spotify.current_user_saved_tracks(limit=50)
     tracks = deque(results['items'])
