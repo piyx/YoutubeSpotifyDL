@@ -10,3 +10,10 @@ Extras:
 
 1. Feature to download entire playlists
 2. Download saved tracks
+
+
+
+
+
+results['items'][i]['track'] -> playlists/user_saved_tracks
+results['items']['tracks'][i] -> album items
