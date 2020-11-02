@@ -1,7 +1,7 @@
 import requests
 from spotipy import Spotify
 from spotipy import util
-from spotify_client_manager import SpotifyClientManager
+from spotifyclient import SpotifyClientManager
 import os
 import pprint
 
@@ -19,32 +19,27 @@ class Song:
         return f'Song({self.title}, {self.artist}, {self.album}, {self.image})'
 
     def __str__(self):
-        return f'Song({self.title})'
+        return self.title
 
 
 class SpotifyTracks:
     def __init__(self):
         self.spotify = Spotify(auth=client_manager.get_token)
 
-    def get_cleaned_tracks_data(self, track_ids=None, results=None):
+    def get_cleaned_tracks_data(self, results):
         '''
         Returns a list of songs given a list of track IDs
         song -> contains useful track data
         '''
-        if not track_ids and not results:
-            return None
+        ''' Get useful information from the results
 
-        if track_ids:
-            results = self.spotify.tracks(track_ids)
-            tracks = results['tracks']
-            pprint.pprint(tracks[0])
-
-        if results:
-            tracks = results['items']
-            pprint.pprint(tracks[0])
-
+        Parameters:
+            - results: json/dictionary containing tracks data
+        '''
         songs = []
-        for track in tracks:
+        for item in results['items']:
+            track = item['track'] if 'track' in item else item
+
             album = track['album']['name']
             artist = track['artists'][0]['name']
             title = track['name']
@@ -53,26 +48,14 @@ class SpotifyTracks:
 
         return songs
 
-    @staticmethod
-    def get_track_ids(items):
-        '''
-        param: items: list of all playlist/album/saved tracks
-        '''
-        return [item['id'] for item in items]
+    def get_playlist_tracks(self, playlist_id, limit=10):
+        ''' Get a list of tracks of a playlist.
 
-    def get_album_tracks(self, album_id):
+        Parameters:
+            - playlist_id : the id of the playlist
+            - limit       : the number of tracks to return (max = 50, default = 10)
         '''
-        Returns a list of all tracks from the given album
-        '''
-        results = self.spotify.album_tracks(album_id)
-        track_ids = SpotifyTracks.get_track_ids(results['items'])
-        album_tracks = self.get_cleaned_tracks_data(track_ids)
-        return album_tracks
-
-    def get_playlist_tracks(self, playlist_id):
-        '''
-        Returns a list of all tracks from the given playlist
-        '''
+        limit = min(50, limit)
         query = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
         response = requests.get(
             url=query,
@@ -83,38 +66,37 @@ class SpotifyTracks:
         )
 
         results = response.json()
-        pprint.pprint(results)
-        playlist_tracks = self.get_cleaned_tracks_data(results=results)
-        return playlist_tracks
+        return self.get_cleaned_tracks_data(results)[:limit]
 
-    def get_user_saved_tracks(self):
-        '''
-        Returns a list of all tracks liked/saved by the user
-        '''
-        results = self.spotify.current_user_saved_tracks(limit=2)
-        pprint.pprint(results)
+    def get_user_saved_tracks(self, limit=10):
+        ''' Get a list of the user saved tracks.
 
-        track_ids = SpotifyTracks.get_track_ids(results['items'])
-        saved_tracks = self.get_cleaned_tracks_data(track_ids)
-        return saved_tracks
+        Parameters:
+            - playlist_id : the id of the playlist
+            - limit       : the number of tracks to return (max = 50, default = 10)
+        '''
+        limit = min(50, limit)
+        results = self.spotify.current_user_saved_tracks(limit=limit)
+        return self.get_cleaned_tracks_data(results)
 
     def search_track(self, artist_name, song_name):
-        '''
-        Returns the first track result from the query results if it exists
-        Returned as a list so same download function can be used on it.
+        ''' Get a particular track info
+
+        Parameters:
+            - artist_name : the name of the artist
+            - song_name   : the name of the song
         '''
         results = self.spotify.search(
-            q=f'artist:{artist_name}%20track:{song_name}',
-            type='track'
+            q=f'artist:{artist_name} track:{song_name}',
+            type='track',
+            limit=1
         )
 
-        # Getting the first search result
-        track_id = SpotifyTracks.get_track_ids(results['items'][0])
-        first_track = self.get_cleaned_tracks_data(track_id)
-        return first_track
+        return self.get_cleaned_tracks_data(results['tracks'])
 
 
-sp = SpotifyTracks()
-# print(sp.get_playlist_tracks('37i9dQZF1DXcRXFNfZr7Tp'))
-# print(sp.get_album_tracks('79dL7FLiJFOO0EoehUHQBv'))
-print(sp.get_user_saved_tracks())
+if __name__ == "__main__":
+    sp = SpotifyTracks()
+    pprint.pprint(sp.get_playlist_tracks('37i9dQZF1DXcRXFNfZr7Tp'))
+    pprint.pprint(sp.search_track('flor', 'hold on'))
+    pprint.pprint(sp.get_user_saved_tracks(limit=100))
