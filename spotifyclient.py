@@ -1,6 +1,5 @@
 from spotipy import Spotify
 from spotipy import util
-from utils import Song
 import os
 
 
