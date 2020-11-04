@@ -59,12 +59,20 @@ def spotify_download(songs):
     print("Press ctrl+c to stop.")
     for song in tqdm(songs):
         name = f'{song.artist} {song.title}'
+
+        # Check if song exists
+
         song_path = download_song_from_yt(name)
+
         if not song_path:
             continue
 
         src = song_path
         dest = os.path.splitext(src)[0] + '.mp3'
+
+        if os.path.exists(dest):
+            os.remove(src)
+            continue
 
         convert_to_mp3(src, dest)
         add_tags(dest, song)
@@ -81,7 +89,8 @@ def main():
         "Enter choice: "))
 
     if choice == 1:
-        songs = spotify_tracks.get_user_saved_tracks(limit=50)
+        limit = int(input("Enter number of songs to download: "))
+        songs = spotify_tracks.get_user_saved_tracks(limit=limit)
     elif choice == 2:
         playlist_id = input("Enter playlist id: ")
         songs = spotify_tracks.get_playlist_tracks(playlist_id)
