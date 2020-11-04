@@ -85,6 +85,7 @@ class SpotifyTracks:
             results = self.spotify.current_user_saved_tracks(
                 limit=50, offset=offset)
             partial_results = self.get_cleaned_tracks_data(results)
+
             if not partial_results:
                 break
 
