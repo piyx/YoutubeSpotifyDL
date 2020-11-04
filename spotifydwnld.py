@@ -73,6 +73,7 @@ def spotify_download(songs):
 def main():
     # songs = spotify_tracks.get_user_saved_tracks(limit=50)
     choice = int(input(
+        f"{'-'*50}\n"
         "SPOTIFYDL\n"
         "1.Download liked songs\n"
         "2.Download a playlist\n"
