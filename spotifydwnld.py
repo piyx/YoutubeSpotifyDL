@@ -4,15 +4,15 @@ from urllib.request import urlopen
 from spotipy import Spotify
 from pytube import YouTube
 from pathlib import Path
+from tqdm import tqdm
 import eyed3
 import re
 import os
 
-PATH = Path('music')
+PATH = Path('C:/Users/ctrla/Music')
+
 space = ' '*50
 spotify_tracks = SpotifyTracks()
-
-os.chdir(PATH)
 
 
 def get_yt_url(song_name):
@@ -54,19 +54,12 @@ def add_tags(song_path, song):
     tag.save(version=eyed3.id3.ID3_V2_3)
 
 
-def spotify_download(songs, foldername):
-    if not os.path.exists(foldername):
-        os.mkdir(foldername)
-
-    os.chdir(foldername)
-
+def spotify_download(songs):
     print("Press ctrl+c to stop.")
-    for song in songs:
+    for song in tqdm(songs):
         name = f'{song.artist} {song.title}'
         song_path = download_song_from_yt(name)
-        print(f'Downloading {name} {space}', end='\r')
         if not song_path:
-            print(f'Error downloading {name}')
             continue
 
         src = song_path
@@ -75,12 +68,13 @@ def spotify_download(songs, foldername):
         convert_to_mp3(src, dest)
         add_tags(dest, song)
 
-    print(f'Download complete. {space}')
-
 
 def main():
-    songs = spotify_tracks.get_user_saved_tracks()
-    spotify_download(songs, 'likedsongs')
+    # songs = spotify_tracks.get_user_saved_tracks(limit=50)
+    songs = spotify_tracks.search_track('shawn', 'senorita')
+    print(songs)
+    os.chdir(PATH)
+    spotify_download(songs)
 
 
 if __name__ == "__main__":
