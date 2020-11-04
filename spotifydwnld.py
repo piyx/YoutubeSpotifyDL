@@ -5,6 +5,7 @@ from spotipy import Spotify
 from pytube import YouTube
 from pathlib import Path
 from tqdm import tqdm
+import argparse
 import eyed3
 import re
 import os
@@ -71,8 +72,26 @@ def spotify_download(songs):
 
 def main():
     # songs = spotify_tracks.get_user_saved_tracks(limit=50)
-    songs = spotify_tracks.search_track('shawn', 'senorita')
-    print(songs)
+    choice = int(input(
+        "SPOTIFYDL\n"
+        "1.Download liked songs\n"
+        "2.Download a playlist\n"
+        "3.Download a particular song\n"
+        "Enter choice: "))
+
+    if choice == 1:
+        songs = spotify_tracks.get_user_saved_tracks(limit=50)
+    elif choice == 2:
+        playlist_id = input("Enter playlist id: ")
+        songs = spotify_tracks.get_playlist_tracks(playlist_id)
+    elif choice == 3:
+        artist = input("Enter artist name: ")
+        title = input("Enter song name: ")
+        songs = spotify_tracks.search_track(artist, title)
+    else:
+        print("\nInvalid choice!")
+        return
+
     os.chdir(PATH)
     spotify_download(songs)
 
