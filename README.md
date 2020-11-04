@@ -10,7 +10,7 @@ Spotify downloader
 
 ![](imgs/copy.png)
 
-3.Set redirect uri to "http://localhost:8888/callback"
+3.Set redirect uri to http://localhost:8888/callback
 
 ![](imgs/redirecturi.png)
 
@@ -42,3 +42,13 @@ Enter a choice and it will start downloading
 ## Result
 
 ![](imgs/songs.png)
+
+## How it works
+
+```
+* Program Gets the deatils of the songs from spotify api.  
+* It then searches the song on youtube and extracts the youtube song url  
+* The song is then downloaded as mp4 from youtube using Pytube module
+* mp4 is converted to mp3 using ffmpeg  
+* Tags are added to the mp3 song (Artist, title, album, album art image)  
+```
