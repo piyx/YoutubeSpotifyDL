@@ -59,9 +59,7 @@ class SpotifyTracks:
 
         Parameters:
             - playlist_id: the id of the playlist
-            - limit: the number of tracks to return (max=50, default=10)
         '''
-        limit = min(50, limit)
         query = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
         response = requests.get(
             url=query,
@@ -72,7 +70,7 @@ class SpotifyTracks:
         )
 
         results = response.json()
-        return self.get_cleaned_tracks_data(results)[:limit]
+        return self.get_cleaned_tracks_data(results)
 
     def get_user_saved_tracks(self, limit=10):
         ''' Get a list of the user saved tracks.
