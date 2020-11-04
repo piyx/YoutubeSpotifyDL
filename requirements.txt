@@ -1,0 +1,5 @@
+pytube
+spotipy
+eyeD3
+ffmpeg
+requests
