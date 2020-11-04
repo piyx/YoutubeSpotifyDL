@@ -79,9 +79,15 @@ class SpotifyTracks:
             - playlist_id: the id of the playlist
             - limit: the number of tracks to return (max=50, default=10)
         '''
-        limit = min(50, limit)
-        results = self.spotify.current_user_saved_tracks(limit=limit)
-        return self.get_cleaned_tracks_data(results)
+        offset = 0
+        saved_tracks = []
+        while offset < limit:
+            results = self.spotify.current_user_saved_tracks(
+                limit=50, offset=offset)
+            saved_tracks += self.get_cleaned_tracks_data(results)
+            offset += 50
+
+        return saved_tracks
 
     def search_track(self, artist_name, song_name):
         ''' Get a particular track info
