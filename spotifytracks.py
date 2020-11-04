@@ -84,7 +84,11 @@ class SpotifyTracks:
         while offset < limit:
             results = self.spotify.current_user_saved_tracks(
                 limit=50, offset=offset)
-            saved_tracks += self.get_cleaned_tracks_data(results)
+            partial_results = self.get_cleaned_tracks_data(results)
+            if not partial_results:
+                break
+
+            saved_tracks += partial_results
             offset += 50
 
         return saved_tracks
