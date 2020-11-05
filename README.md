@@ -15,7 +15,7 @@ Spotify downloader
 ![](imgs/redirecturi.png)
 
 ### Setting Environment Variables (Windows)
-`set SPOTIFY_USER_ID <your_user_id>`
+`set SPOTIFY_USER_ID <your_user_id>`  
 `set SPOTIFY_CLIENT_ID <your_client_id>`  
 `set SPOTIFY_CLIENT_SECRET <your_client_secret>`  
 `set SPOTIFY_REDIRECT_URI 'http://localhost:8888/callback'`  
