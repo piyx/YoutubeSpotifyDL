@@ -54,7 +54,7 @@ class SpotifyTracks:
 
         return songs
 
-    def get_playlist_tracks(self, playlist_id, limit=10):
+    def get_playlist_tracks(self, playlist_id):
         ''' Get a list of tracks of a playlist.
 
         Parameters:
