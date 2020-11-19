@@ -3,3 +3,4 @@ spotipy
 eyeD3
 ffmpeg
 requests
+tqdm

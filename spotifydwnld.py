@@ -10,7 +10,10 @@ import eyed3
 import re
 import os
 
-PATH = Path('C:/Users/ctrla/Music')
+if os.name == 'nt':
+    PATH = Path((os.path.expanduser('~')).replace('\\', '/')+'/Music')
+else:
+    PATH = Path((os.path.expanduser('~'))+'\Music')
 
 space = ' '*50
 spotify_tracks = SpotifyTracks()
