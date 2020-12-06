@@ -2,6 +2,10 @@
 
 Spotify downloader
 
+## Example
+
+![](imgs/example.gif)
+
 ## Setup
 
 1.Create an app: https://developer.spotify.com/dashboard/applications
@@ -25,28 +29,34 @@ Spotify downloader
 
 ## Dependencies
 
-To install all modules run `pip install -r requirements.txt`
+To install all modules run `pip install -r requirements.txt`  
 Download ffmpeg from here https://github.com/BtbN/FFmpeg-Builds/releases and add it to Environment PATH.
 
 ## Usage
 
 `python main.py`
 
-## Output
+## Sample Output
 
 ```
-SPOTIFYDL
-1.Download liked songs
-2.Download a playlist
-3.Download a particular song
-Enter choice:
+? What do you want to do?  (Use arrow keys)
+ ❯ 1.Download your liked songs
+   2.Download a playlist
+   3.Download a particular song
+   4.Exit
+
+? What do you want to do?  1.Download your liked songs
+? You have 70 liked songs.
+ ❯ 1.Download all
+   2.Enter a custom value:
+   3.Exit
+
+? Where do you want to download the song?  (Use arrow keys)
+ ❯ 1.Current folder
+   2.Create a new folder here and download
+   3.Enter a custom download path
+   4.Exit
 ```
-
-Enter a choice and it will start downloading
-
-## Example
-
-![](imgs/output.png)
 
 ## Result
 
