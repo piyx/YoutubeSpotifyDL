@@ -4,19 +4,24 @@ from urllib.request import urlopen
 from spotipy import Spotify
 from pytube import YouTube
 from pathlib import Path
-from tqdm import tqdm
 import argparse
+import signal
 import eyed3
+import sys
 import re
 import os
 
-if os.name == 'nt':
-    PATH = Path((os.path.expanduser('~')).replace('\\', '/')+'/Music')
-else:
-    PATH = Path((os.path.expanduser('~'))+'\Music')
+interrupted = False
 
-space = ' '*50
 spotify_tracks = SpotifyTracks()
+
+
+def signal_handler(signal, frame):
+    global interrupted
+    interrupted = True
+
+
+signal.signal(signal.SIGINT, signal_handler)
 
 
 def get_yt_url(song_name):
@@ -58,56 +63,33 @@ def add_tags(song_path, song):
     tag.save(version=eyed3.id3.ID3_V2_3)
 
 
-def spotify_download(songs):
-    print("Press ctrl+c to stop.")
-    for song in tqdm(songs):
+def spotify_download(songs, limit):
+    print("Hold ctrl+c to stop.")
+    skipped, downloaded, error = 0, 0, 0
+    for i, song in enumerate(songs[:limit], 1):
+        print(f"\rDownloading song {i} of {limit}.", end="")
         name = f'{song.artist} {song.title}'
 
-        # Check if song exists
+        # Keyboard interrupt
+        if interrupted:
+            sys.exit()
 
         song_path = download_song_from_yt(name)
 
         if not song_path:
+            error += 1
             continue
 
         src = song_path
         dest = os.path.splitext(src)[0] + '.mp3'
 
         if os.path.exists(dest):
+            skipped += 1
             os.remove(src)
             continue
 
         convert_to_mp3(src, dest)
         add_tags(dest, song)
+        downloaded += 1
 
-
-def main():
-    # songs = spotify_tracks.get_user_saved_tracks(limit=50)
-    choice = int(input(
-        f"{'-'*50}\n"
-        "SPOTIFYDL\n"
-        "1.Download liked songs\n"
-        "2.Download a playlist\n"
-        "3.Download a particular song\n"
-        "Enter choice: "))
-
-    if choice == 1:
-        limit = int(input("Enter number of songs to download: "))
-        songs = spotify_tracks.get_user_saved_tracks(limit=limit)
-    elif choice == 2:
-        playlist_id = input("Enter playlist id: ")
-        songs = spotify_tracks.get_playlist_tracks(playlist_id)
-    elif choice == 3:
-        artist = input("Enter artist name: ")
-        title = input("Enter song name: ")
-        songs = spotify_tracks.search_track(artist, title)
-    else:
-        print("\nInvalid choice!")
-        return
-
-    os.chdir(PATH)
-    spotify_download(songs)
-
-
-if __name__ == "__main__":
-    main()
+    print(f"\nDone! Status: [{skipped=}, {error=}, {downloaded=}]")
