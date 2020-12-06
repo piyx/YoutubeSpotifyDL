@@ -1,22 +1,12 @@
-# -*- coding: utf-8 -*-
-"""
-list prompt example
-"""
-from __future__ import print_function, unicode_literals
-
-from pprint import pprint
-
-from PyInquirer import prompt, Separator
-
-import sys
-import os
-from pathlib import Path
-
-from spotifytracks import SpotifyTracks
 from spotifydwnld import download_song_from_yt
-from spotifydwnld import get_yt_url
 from spotifydwnld import add_tags, convert_to_mp3
 from spotifydwnld import spotify_download
+from PyInquirer import prompt, Separator
+from spotifytracks import SpotifyTracks
+from spotifydwnld import get_yt_url
+from pathlib import Path
+import sys
+import os
 
 
 def ask_download_option():
@@ -138,51 +128,40 @@ def ask_download_path():
         sys.exit()
 
 
-# if os.name == 'nt':
-#     PATH = Path((os.path.expanduser('~')).replace('\\', '/')+'/Music')
-
-# else:
-#     PATH = Path((os.path.expanduser('~'))+'\Music')
-
-
-# choice = ask_download_option()
-# if '1' in choice:
-#     print(download_liked_songs(10))
-# elif '2' in choice:
-#     print(download_playlist_songs())
-# elif '3' in choice:
-#     print(download_particular_song())
-# elif '4' in choice:
-#     print("Not Implemented")
-# else:
-#     sys.exit()
-
-
 def main():
     spotify_tracks = SpotifyTracks()
     choice = ask_download_option()
+
     if '1' in choice:
         songs = spotify_tracks.get_user_saved_tracks()
         num_songs = ask_num_songs_to_download(len(songs))
+
     elif '2' in choice:
         playlist_id = ask_download_playlist_songs()
         songs = spotify_tracks.get_playlist_tracks(playlist_id)
+
         if not songs:
             return print('Invalid playlist ID or playlist is empty.')
+
         num_songs = ask_num_songs_to_download(len(songs), is_playlist=True)
+
     elif '3' in choice:
         data = ask_download_particular_song()
         songs = spotify_tracks.search_track(data['artist'], data['song'])
         num_songs = 1
+
     else:
         sys.exit()
 
     path = ask_download_path()
+
     if not os.path.exists(path):
         print('Invalid path')
         return
+
     os.chdir(Path(path))
     spotify_download(songs, limit=num_songs)
 
 
-main()
+if __name__ == "__main__":
+    main()
