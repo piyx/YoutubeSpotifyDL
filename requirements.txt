@@ -1,6 +1,5 @@
 pytube
 spotipy
-eyeD3
-ffmpeg
 requests
+eyeD3
 tqdm
