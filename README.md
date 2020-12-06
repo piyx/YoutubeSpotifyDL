@@ -30,7 +30,7 @@ Download ffmpeg from here https://github.com/BtbN/FFmpeg-Builds/releases and add
 
 ## Usage
 
-`python spotifydwnld.py`
+`python main.py`
 
 ## Output
 

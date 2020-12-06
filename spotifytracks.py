@@ -70,17 +70,20 @@ class SpotifyTracks:
         )
 
         results = response.json()
+        if not response.ok:
+            return None
         return self.get_cleaned_tracks_data(results)
 
-    def get_user_saved_tracks(self, limit=10):
+    def get_user_saved_tracks(self, limit=10000):
         ''' Get a list of the user saved tracks.
 
         Parameters:
             - playlist_id: the id of the playlist
-            - limit: the number of tracks to return (max=50, default=10)
+            - limit: the number of tracks to return. defualt: gets all liked songs
         '''
         offset = 0
         saved_tracks = []
+
         while offset < limit:
             results = self.spotify.current_user_saved_tracks(
                 limit=50, offset=offset)
@@ -92,7 +95,7 @@ class SpotifyTracks:
             saved_tracks += partial_results
             offset += 50
 
-        return saved_tracks
+        return saved_tracks[:limit]
 
     def search_track(self, artist_name, song_name):
         ''' Get a particular track info
@@ -112,9 +115,9 @@ class SpotifyTracks:
 
 if __name__ == "__main__":
     sp = SpotifyTracks()
-    pprint.pprint(sp.get_playlist_tracks('37i9dQZF1DXcRXFNfZr7Tp'))
-    pprint.pprint(sp.search_track('flor', 'hold on'))
-    pprint.pprint(sp.get_user_saved_tracks(limit=100))
+    # pprint.pprint(sp.get_playlist_tracks('37i9dQZF1DXcRXFNfZr7Tp'))
+    # pprint.pprint(sp.search_track('flor', 'hold on'))
+    pprint.pprint(sp.get_user_saved_tracks(limit=300))
 
     song = Song(
         title='hold on',
