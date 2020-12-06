@@ -115,8 +115,8 @@ class SpotifyTracks:
 
 if __name__ == "__main__":
     sp = SpotifyTracks()
-    # pprint.pprint(sp.get_playlist_tracks('37i9dQZF1DXcRXFNfZr7Tp'))
-    # pprint.pprint(sp.search_track('flor', 'hold on'))
+    pprint.pprint(sp.get_playlist_tracks('37i9dQZF1DXcRXFNfZr7Tp'))
+    pprint.pprint(sp.search_track('flor', 'hold on'))
     pprint.pprint(sp.get_user_saved_tracks(limit=300))
 
     song = Song(
