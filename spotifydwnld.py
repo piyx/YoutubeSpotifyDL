@@ -5,7 +5,6 @@ from spotipy import Spotify
 from pytube import YouTube
 from pathlib import Path
 import argparse
-import signal
 import eyed3
 import sys
 import re
@@ -14,14 +13,6 @@ import os
 interrupted = False
 
 spotify_tracks = SpotifyTracks()
-
-
-def signal_handler(signal, frame):
-    global interrupted
-    interrupted = True
-
-
-signal.signal(signal.SIGINT, signal_handler)
 
 
 def get_yt_url(song_name):
@@ -43,7 +34,7 @@ def download_song_from_yt(song_name):
         yt = YouTube(song_url)
         path = yt.streams.get_audio_only().download()
         return os.path.basename(path)
-    except:
+    except Exception as e:
         return None
 
 
@@ -64,15 +55,11 @@ def add_tags(song_path, song):
 
 
 def spotify_download(songs, limit):
-    print("Hold ctrl+c to stop.")
+    print("Press ctrl+c to stop.")
     skipped, downloaded, error = 0, 0, 0
     for i, song in enumerate(songs[:limit], 1):
         print(f"\rDownloading song {i} of {limit}.", end="")
         name = f'{song.artist} {song.title}'
-
-        # Keyboard interrupt
-        if interrupted:
-            sys.exit()
 
         song_path = download_song_from_yt(name)
 
