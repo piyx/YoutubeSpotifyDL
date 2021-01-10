@@ -54,27 +54,41 @@ class SpotifyTracks:
 
         return songs
 
-    def get_playlist_tracks(self, playlist_id):
+    def get_playlist_tracks(self, playlist_id, limit=None):
         ''' Get a list of tracks of a playlist.
 
         Parameters:
             - playlist_id: the id of the playlist
         '''
-        query = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks"
-        response = requests.get(
-            url=query,
-            headers={
-                "Content-Type": "application/json",
-                "Authorization": f'Bearer {client_manager.get_token}'
-            }
-        )
+        offset = 0
+        playlist_tracks = []
+        if limit is None: limit = 10000
+        
+        while offset < limit:
+            query = f"https://api.spotify.com/v1/playlists/{playlist_id}/tracks?offset={offset}&limit=50"
+            response = requests.get(
+                url=query,
+                headers={
+                    "Content-Type": "application/json",
+                    "Authorization": f'Bearer {client_manager.get_token}'
+                }
+            )
 
-        results = response.json()
-        if not response.ok:
-            return None
-        return self.get_cleaned_tracks_data(results)
+            results = response.json()
+            if not response.ok:
+                break
 
-    def get_user_saved_tracks(self, limit=10000):
+            partial_tracks = self.get_cleaned_tracks_data(results)
+            
+            if not partial_tracks:
+                break
+            
+            playlist_tracks += partial_tracks
+            offset += 50
+        
+        return playlist_tracks[:limit]
+
+    def get_user_saved_tracks(self, limit=None):
         ''' Get a list of the user saved tracks.
 
         Parameters:
@@ -83,10 +97,10 @@ class SpotifyTracks:
         '''
         offset = 0
         saved_tracks = []
+        if limit is None: limit = 10000
 
         while offset < limit:
-            results = self.spotify.current_user_saved_tracks(
-                limit=50, offset=offset)
+            results = self.spotify.current_user_saved_tracks(offset=offset, limit=50)
             partial_results = self.get_cleaned_tracks_data(results)
 
             if not partial_results:
