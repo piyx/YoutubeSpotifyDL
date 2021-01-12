@@ -1,13 +1,13 @@
-from spotifydwnld import download_song_from_yt
-from spotifydwnld import add_tags, convert_to_mp3
-from spotifydwnld import spotify_download
-from PyInquirer import prompt, Separator
-from spotifytracks import SpotifyTracks
-from spotifydwnld import get_yt_url
+from PyInquirer import prompt
 from pathlib import Path
 import sys
 import os
+import re
 
+from spotifydwnld import spotify_download
+from spotifytracks import SpotifyTracks
+
+MAXVAL = 10000
 
 def ask_download_option():
     options = {
@@ -24,16 +24,11 @@ def ask_download_option():
     return prompt(options)['choice']
 
 
-def ask_num_songs_to_download(num_songs_present, is_playlist=False):
-    if is_playlist:
-        message = f'There are {num_songs_present} songs in playlist.\n'
-    else:
-        message = f'You have {num_songs_present} liked songs.\n'
-
+def ask_num_songs_to_download():
     options = {
         'type': 'list',
         'name': 'choice',
-        'message': message,
+        'message': 'Select an option.',
         'choices': [
             '1.Download all',
             '2.Enter a custom value:',
@@ -55,15 +50,15 @@ def ask_num_songs_to_download(num_songs_present, is_playlist=False):
 
     elif '3' in ans:
         sys.exit()
-
-    return num_songs_present
+    
+    return MAXVAL
 
 
 def ask_download_playlist_songs():
     options = {
         'type': 'input',
         'name': 'id',
-        'message': 'Enter playlist id:'
+        'message': 'Enter playlist id or url:'
     }
 
     return prompt(options)['id']
@@ -133,21 +128,22 @@ def main():
     choice = ask_download_option()
 
     if '1' in choice:
-        songs = spotify_tracks.get_user_saved_tracks()
-        num_songs = ask_num_songs_to_download(len(songs))
+        num_songs = ask_num_songs_to_download()
+        songs = spotify_tracks.get_user_saved_tracks(limit=num_songs)
 
     elif '2' in choice:
         playlist_id = ask_download_playlist_songs()
-        songs = spotify_tracks.get_playlist_tracks(playlist_id)
+        if "https" in playlist_id:
+            playlist_id = re.search(r'playlist\/(.*)\?', playlist_id).group(1)
+        num_songs = ask_num_songs_to_download()
+        songs = spotify_tracks.get_playlist_tracks(playlist_id, limit=num_songs)
 
         if not songs:
             return print('Invalid playlist ID or playlist is empty.')
 
-        num_songs = ask_num_songs_to_download(len(songs), is_playlist=True)
-
     elif '3' in choice:
         data = ask_download_particular_song()
-        songs = spotify_tracks.search_track(data['artist'], data['song'])
+        songs = [spotify_tracks.search_track(data['artist'], data['song'])] # List of 1 song
         num_songs = 1
 
     else:
@@ -160,7 +156,10 @@ def main():
         return
 
     os.chdir(Path(path))
-    spotify_download(songs, limit=num_songs)
+
+    print("Press ctrl+c to stop.")
+    for song in songs:
+        spotify_download(song)
 
 
 if __name__ == "__main__":
