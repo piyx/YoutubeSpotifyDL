@@ -29,8 +29,7 @@ Spotify downloader
 
 ## Dependencies
 
-To install all modules run `pip install -r requirements.txt`  
-Download ffmpeg from here https://github.com/BtbN/FFmpeg-Builds/releases and add it to Environment PATH.
+To install all modules run `pip install -r requirements.txt`
 
 ## Usage
 
@@ -38,36 +37,18 @@ Download ffmpeg from here https://github.com/BtbN/FFmpeg-Builds/releases and add
 
 ## Sample Output
 
-```
-? What do you want to do?  (Use arrow keys)
- ❯ 1.Download your liked songs
-   2.Download a playlist
-   3.Download a particular song
-   4.Exit
-
-? What do you want to do?  1.Download your liked songs
-? You have 70 liked songs.
- ❯ 1.Download all
-   2.Enter a custom value:
-   3.Exit
-
-? Where do you want to download the song?  (Use arrow keys)
- ❯ 1.Current folder
-   2.Create a new folder here and download
-   3.Enter a custom download path
-   4.Exit
-```
+![](imgs/terminal.png)
 
 ## Result
 
-![](imgs/songs.png)
+![](imgs/folder.png)
+![](imgs/musicplayer.png)
 
 ## How it works
 
 ```
-* Program Gets the deatils of the songs from spotify api.
+* Program Gets the deatils of the songs from spotify api (for spotify songs) and youtube music api (for youtube songs)  
 * It then searches the song on youtube and extracts the youtube song url
-* The song is then downloaded as mp4 from youtube using Pytube module
-* mp4 is converted to mp3 using ffmpeg
-* Tags are added to the mp3 song (Artist, title, album, album art image)
+* The song is then downloaded as m4a from youtube using pafy module
+* Metadata are added to the m4a song (Artist, title, album, album art image)
 ```
