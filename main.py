@@ -4,12 +4,39 @@ import sys
 import os
 import re
 
-from spotifydwnld import spotify_download
 from spotifytracks import SpotifyTracks
+from youtubetracks import Youtube
+from downloader import download
 
 MAXVAL = 10000
 
-def ask_download_option():
+def ask_platform():
+    options = {
+        'type': 'list',
+        'name': 'choice',
+        'message': 'Download From?',
+        'choices': [
+            '1.Spotify',
+            '2.Youtube',
+            '3.Exit'
+        ]
+    }
+    return prompt(options)['choice']
+
+def ask_download_option_youtube():
+    options = {
+        'type': 'list',
+        'name': 'choice',
+        'message': 'What do you want to do?',
+        'choices': [
+            '1.Download a playlist',
+            '2.Download a particular song',
+            '3.Exit'
+        ]
+    }
+    return prompt(options)['choice']
+
+def ask_download_option_spotify():
     options = {
         'type': 'list',
         'name': 'choice',
@@ -58,7 +85,7 @@ def ask_download_playlist_songs():
     options = {
         'type': 'input',
         'name': 'id',
-        'message': 'Enter playlist id or url:'
+        'message': 'Enter playlist id or url (Enter playlist id for youtube):'
     }
 
     return prompt(options)['id']
@@ -123,9 +150,9 @@ def ask_download_path():
         sys.exit()
 
 
-def main():
+def spotifydl():
     spotify_tracks = SpotifyTracks()
-    choice = ask_download_option()
+    choice = ask_download_option_spotify()
 
     if '1' in choice:
         num_songs = ask_num_songs_to_download()
@@ -144,12 +171,44 @@ def main():
     elif '3' in choice:
         data = ask_download_particular_song()
         songs = [spotify_tracks.search_track(data['artist'], data['song'])] # List of 1 song
-        num_songs = 1
 
     else:
         sys.exit()
 
     path = ask_download_path()
+
+    return songs, path
+
+def youtubedl():
+    yt = Youtube()
+    choice = ask_download_option_youtube()
+
+    if '1' in choice:
+        playlist_id = ask_download_playlist_songs()
+        num_songs = ask_num_songs_to_download()
+        songs = yt.get_playlist_tracks(playlist_id, limit=num_songs)
+
+    elif '2' in choice:
+        data = ask_download_particular_song()
+        songs = [yt.get_song(f"{data['artist']} {data['song']}")] # List of 1 song
+    
+    else:
+        sys.exit()
+
+    path = ask_download_path()
+
+    return songs, path
+
+def main():
+    platform = ask_platform()
+    if '1' in platform:
+        songs, path = spotifydl()
+    
+    elif '2' in platform:
+        songs, path = youtubedl()
+    
+    else:
+        sys.exit()
 
     if not os.path.exists(path):
         print('Invalid path')
@@ -159,8 +218,7 @@ def main():
 
     print("Press ctrl+c to stop.")
     for song in songs:
-        spotify_download(song)
-
+        download(song)
 
 if __name__ == "__main__":
     main()
