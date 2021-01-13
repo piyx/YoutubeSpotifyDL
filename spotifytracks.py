@@ -1,4 +1,5 @@
 from collections.abc import Iterator
+from typing import Union
 from spotipy import Spotify
 from spotipy import util
 import requests
@@ -6,6 +7,7 @@ import pprint
 import os
 
 from utils import SpotifyClientManager
+from utils import get_yt_url
 from utils import Song
 
 
@@ -16,7 +18,7 @@ class SpotifyTracks:
     def __init__(self):
         self.spotify = Spotify(auth=token)
 
-    def get_cleaned_track_data(self, item: dict) -> Song:
+    def get_cleaned_track_data(self, item: dict) -> Union[Song, None]:
         ''' Get required useful information from the results
         Eg: Title, artist, album, imgurl
 
@@ -28,10 +30,16 @@ class SpotifyTracks:
             album = track['album']['name']
             artist = track['artists'][0]['name']
             title = track['name']
-            image = track['album']['images'][0]['url']
-            return Song(title, artist, album, image)
+            imgurl = track['album']['images'][0]['url']
+            return Song(vidurl=None,
+                        title=title, 
+                        artist=artist, 
+                        album=album, 
+                        imgurl=imgurl)
+        
         except Exception as e:
             print(e)
+            return None
 
     def get_playlist_tracks(self, playlist_id: str, limit: int = None) -> Iterator[Song]:
         ''' Get a list of tracks of a playlist.

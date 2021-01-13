@@ -7,24 +7,13 @@ import os
 import pafy
 
 from utils import Song
+from utils import get_yt_url
 
 
-def get_yt_url(song_name):
-    # Replacing whitespace with '+' symbol
-    song_name = '+'.join(song_name.split()).encode('utf-8')
-    search_url = f"https://www.youtube.com/results?search_query={song_name}"
-    html = urlopen(search_url).read().decode()
-    video_ids = re.findall(r"watch\?v=(\S{11})", html)
-    if video_ids:
-        return f"https://www.youtube.com/watch?v={video_ids[0]}"
-    
-    return None
-
-def download_song_from_yt(song_name: str) -> None:
+def download_song_from_yt(vid_url: str, song_name: str) -> None:
     '''Download song in the current directory and rename it'''
     try:
-        song_url = get_yt_url(song_name)
-        vid = pafy.new(song_url)
+        vid = pafy.new(vid_url)
         vid.getbestaudio(preftype='m4a').download(f"{song_name}.m4a")
     except Exception as e:
         return None
@@ -42,13 +31,15 @@ def addtags(songpath: str, song: Song) -> None:
     f[ART] = [MP4Cover(res.content, MP4Cover.FORMAT_JPEG)]
     f.save()
 
-def spotify_download(song: Song) -> None:
+def download(song: Song) -> None:
     INVALID = r"[#<%>&\*\{\?\}/\\$+!`'\|\"=@\.\[\]:]*"
     song_name = re.sub(INVALID, "", f'{song.artist} {song.title}') # Remove invalid chars
     print(f"Downloading {song_name}")
     try:
+        if song.vidurl is None:
+            song.vidurl = get_yt_url(song_name)
         song_path = f"{song_name}.m4a"
-        download_song_from_yt(song_name)
+        download_song_from_yt(song.vidurl, song_name)
         addtags(f"{song_name}.m4a", song)
     except Exception as e:
         if os.path.exists(song_path):
