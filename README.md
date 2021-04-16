@@ -1,4 +1,4 @@
-# spotifydl
+# YoutubeSpotifyDL
 
 Spotify downloader
 
