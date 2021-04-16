@@ -1,6 +1,6 @@
 # YoutubeSpotifyDL
 
-Spotify downloader
+Youtube and Spotify downloader
 
 ## Example
 
