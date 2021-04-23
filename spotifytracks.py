@@ -10,6 +10,9 @@ from utils import SpotifyClientManager
 from utils import get_yt_url
 from utils import Song
 
+from dotenv import load_dotenv
+
+load_dotenv()
 
 token = SpotifyClientManager().get_token
 
@@ -41,7 +44,7 @@ class SpotifyTracks:
             print(e)
             return None
 
-    def get_playlist_tracks(self, playlist_id: str, limit: int = None) -> Iterator[Song]:
+    def get_playlist_tracks(self, playlist_id: str, limit: int = None):
         ''' Get a list of tracks of a playlist.
 
         Parameters:
@@ -78,7 +81,7 @@ class SpotifyTracks:
             
             offset += 50
 
-    def get_user_saved_tracks(self, limit: int = None) -> Iterator[Song]:
+    def get_user_saved_tracks(self, limit: int = None):
         ''' Get a list of the user saved tracks.
 
         Parameters:

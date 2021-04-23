@@ -41,7 +41,7 @@ class Youtube:
             return None
         
     
-    def get_playlist_tracks(self, playlist_id: str, limit: int = None) -> Union[Iterator[Song], None]:
+    def get_playlist_tracks(self, playlist_id: str, limit: int = None):
         '''
         Get a genrator of Songs from the given playlist_id
         Works only for public playlists.
