@@ -1,12 +1,17 @@
+from threading import Thread
+
 from PyInquirer import prompt
 from pathlib import Path
 import sys
 import os
 import re
 
+from dotenv import load_dotenv
 from spotifytracks import SpotifyTracks
 from youtubetracks import Youtube
 from downloader import download
+
+load_dotenv()
 
 MAXVAL = 10000
 
@@ -215,10 +220,17 @@ def main():
         return
 
     os.chdir(Path(path))
+    threads = []
 
     print("Press ctrl+c to stop.")
     for song in songs:
-        download(song)
+        thread = Thread(target=download, args=(song,), daemon=True)
+        threads.append(thread)
+        thread.start()
+        # download(song)
+    for thread in threads:
+        thread.join()
+
 
 if __name__ == "__main__":
     main()
