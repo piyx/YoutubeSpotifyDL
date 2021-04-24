@@ -39,6 +39,9 @@ def download(song: Song) -> None:
         if song.vidurl is None:
             song.vidurl = get_yt_url(song_name)
         song_path = f"{song_name}.m4a"
+        if os.path.exists(song_path):
+            print(f"Skipping {song_name} : Already Downloaded")
+            return
         download_song_from_yt(song.vidurl, song_name)
         addtags(f"{song_name}.m4a", song)
     except Exception as e:

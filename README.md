@@ -27,6 +27,18 @@ Youtube and Spotify downloader
 `set SPOTIFY_CLIENT_SECRET <your_client_secret>`  
 `set SPOTIFY_REDIRECT_URI 'http://localhost:8888/callback'`
 
+
+Alternatively, if you want to run this program from the current directory, you could use an environment file `.env` and load the credentials from there.
+
+Copy the sample `.envsample` to `.env` and set the credentials.
+
+```bash
+cp .envsample .env
+```
+
+**NOTE**: If you don't want to use the YoutubeDL functionality, you could set `PAFY_BACKEND = "internal"` and proceed without installing `youtube-dl`. However, this is **NOT** recommended, as Pafy's internal backend is known to be unstable.
+
+
 ## Dependencies
 
 To install all modules run `pip install -r requirements.txt`
