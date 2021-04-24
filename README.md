@@ -36,7 +36,7 @@ Copy the sample `.envsample` to `.env` and set the credentials.
 cp .envsample .env
 ```
 
-**NOTE**: If you don't want to use the YoutubeDL functionality, you could set `PAFY_BACKEND = "internal"` and proceed without installing `youtube-dl`
+**NOTE**: If you don't want to use the YoutubeDL functionality, you could set `PAFY_BACKEND = "internal"` and proceed without installing `youtube-dl`. However, this is **NOT** recommended, as Pafy's internal backend is known to be unstable.
 
 
 ## Dependencies
