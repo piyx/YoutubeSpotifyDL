@@ -22,10 +22,10 @@ Youtube and Spotify downloader
 
 ### Setting Environment Variables (Windows)
 
-`set SPOTIFY_USER_ID <your_user_id>`  
-`set SPOTIFY_CLIENT_ID <your_client_id>`  
-`set SPOTIFY_CLIENT_SECRET <your_client_secret>`  
-`set SPOTIFY_REDIRECT_URI 'http://localhost:8888/callback'`
+`setx SPOTIFY_USER_ID your_user_id`  
+`setx SPOTIFY_CLIENT_ID your_client_id`  
+`setx SPOTIFY_CLIENT_SECRET your_client_secret`  
+`setx SPOTIFY_REDIRECT_URI 'http://localhost:8888/callback'`
 
 
 Alternatively, if you want to run this program from the current directory, you could use an environment file `.env` and load the credentials from there.
