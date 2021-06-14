@@ -6,14 +6,12 @@ import sys
 import os
 import re
 
-from dotenv import load_dotenv
 from spotifytracks import SpotifyTracks
 from youtubetracks import Youtube
 from downloader import download
 
-load_dotenv()
-
 MAXVAL = 10000
+
 
 def ask_platform():
     options = {
@@ -28,6 +26,7 @@ def ask_platform():
     }
     return prompt(options)['choice']
 
+
 def ask_download_option_youtube():
     options = {
         'type': 'list',
@@ -40,6 +39,7 @@ def ask_download_option_youtube():
         ]
     }
     return prompt(options)['choice']
+
 
 def ask_download_option_spotify():
     options = {
@@ -82,7 +82,7 @@ def ask_num_songs_to_download():
 
     elif '3' in ans:
         sys.exit()
-    
+
     return MAXVAL
 
 
@@ -168,14 +168,16 @@ def spotifydl():
         if "https" in playlist_id:
             playlist_id = re.search(r'playlist\/(.*)\?', playlist_id).group(1)
         num_songs = ask_num_songs_to_download()
-        songs = spotify_tracks.get_playlist_tracks(playlist_id, limit=num_songs)
+        songs = spotify_tracks.get_playlist_tracks(
+            playlist_id, limit=num_songs)
 
         if not songs:
             return print('Invalid playlist ID or playlist is empty.')
 
     elif '3' in choice:
         data = ask_download_particular_song()
-        songs = [spotify_tracks.search_track(data['artist'], data['song'])] # List of 1 song
+        songs = [spotify_tracks.search_track(
+            data['artist'], data['song'])]  # List of 1 song
 
     else:
         sys.exit()
@@ -183,6 +185,7 @@ def spotifydl():
     path = ask_download_path()
 
     return songs, path
+
 
 def youtubedl():
     yt = Youtube()
@@ -195,8 +198,9 @@ def youtubedl():
 
     elif '2' in choice:
         data = ask_download_particular_song()
-        songs = [yt.get_song(f"{data['artist']} {data['song']}")] # List of 1 song
-    
+        # List of 1 song
+        songs = [yt.get_song(f"{data['artist']} {data['song']}")]
+
     else:
         sys.exit()
 
@@ -204,14 +208,15 @@ def youtubedl():
 
     return songs, path
 
+
 def main():
     platform = ask_platform()
     if '1' in platform:
         songs, path = spotifydl()
-    
+
     elif '2' in platform:
         songs, path = youtubedl()
-    
+
     else:
         sys.exit()
 

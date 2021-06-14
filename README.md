@@ -27,17 +27,9 @@ Youtube and Spotify downloader
 `setx SPOTIFY_CLIENT_SECRET your_client_secret`  
 `setx SPOTIFY_REDIRECT_URI 'http://localhost:8888/callback'`
 
-
 Alternatively, if you want to run this program from the current directory, you could use an environment file `.env` and load the credentials from there.
 
-Copy the sample `.envsample` to `.env` and set the credentials.
-
-```bash
-cp .envsample .env
-```
-
-**NOTE**: If you don't want to use the YoutubeDL functionality, you could set `PAFY_BACKEND = "internal"` and proceed without installing `youtube-dl`. However, this is **NOT** recommended, as Pafy's internal backend is known to be unstable.
-
+Edit the `.env` file and set the credentials.
 
 ## Dependencies
 
@@ -59,8 +51,8 @@ To install all modules run `pip install -r requirements.txt`
 ## How it works
 
 ```
-* Program Gets the deatils of the songs from spotify api (for spotify songs)  
-  and youtube music api (for youtube songs)  
+* Program Gets the deatils of the songs from spotify api (for spotify songs)
+  and youtube music api (for youtube songs)
 * It then searches the song on youtube and extracts the youtube song url
 * The song is then downloaded as m4a from youtube using pafy module
 * Metadata are added to the m4a song (Artist, title, album, album art image)

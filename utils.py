@@ -6,12 +6,16 @@ from spotipy import util
 import os
 import re
 
+from dotenv import load_dotenv
+
+load_dotenv(".env")
+# print(os.getenv('SPOTIFY_USER_ID'))
+
 SCOPE = 'user-library-read'
 USER_ID = os.getenv('SPOTIFY_USER_ID')
 CLIENT_ID = os.getenv('SPOTIFY_CLIENT_ID')
 CLIENT_SECRET = os.getenv('SPOTIFY_CLIENT_SECRET')
 REDIRECT_URI = os.getenv('SPOTIFY_REDIRECT_URI')
-
 
 
 @dataclass
@@ -50,13 +54,14 @@ class SpotifyClientManager:
 
 def get_yt_url(song_name: str) -> Union[str, None]:
     '''Get youtube video url from  song name'''
-    song_name = '+'.join(song_name.split()).encode('utf-8') # Replacing whitespace with '+' symbol
+    song_name = '+'.join(song_name.split()
+                         ).encode('utf-8')  # Replacing whitespace with '+' symbol
     search_url = f"https://www.youtube.com/results?search_query={song_name}"
     html = urlopen(search_url).read().decode()
     video_ids = re.findall(r"watch\?v=(\S{11})", html)
     if video_ids:
         return f"https://www.youtube.com/watch?v={video_ids[0]}"
-    
+
     return None
 
 

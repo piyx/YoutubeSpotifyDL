@@ -5,3 +5,4 @@ requests==2.25.0
 python-dotenv
 PyInquirer==1.0.3
 ytmusicapi==0.12.2
+youtube-dl
