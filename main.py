@@ -50,7 +50,8 @@ def ask_download_option_spotify():
             '1.Download your liked songs',
             '2.Download a playlist',
             '3.Download a particular song',
-            '4.Exit'
+            '4.Download an album',
+            '5.Exit'
         ]
     }
     return prompt(options)['choice']
@@ -178,6 +179,16 @@ def spotifydl():
         data = ask_download_particular_song()
         songs = [spotify_tracks.search_track(
             data['artist'], data['song'])]  # List of 1 song
+
+    elif '4' in choice:
+        album_id = ask_download_playlist_songs()
+        if "https" in album_id:
+            album_id = re.search(r'album\/(.*)\?', album_id).group(1)
+        num_songs = ask_num_songs_to_download()
+        songs = spotify_tracks.get_album_tracks(album_id, limit=num_songs)
+
+        if not songs:
+            return print('Invalid album ID or album is empty.')
 
     else:
         sys.exit()
