@@ -108,30 +108,31 @@ class SpotifyTracks:
             - playlist_id: the id of the playlist
         '''
         album_query = f"https://api.spotify.com/v1/albums/{album_id}"
-        album_data_response = requests.get(
+        response = requests.get(
             url=album_query,
             headers={
                 "Content-Type": "application/json",
                 "Authorization": f'Bearer {token}'
             }
         )
-        album_data_response = album_data_response.json()
+        album_data_response = response.json()
         offset = 0
         if limit is None:
             limit = 10000
         fetched = 0
         while offset < limit:
-            query = f"https://api.spotify.com/v1/albums/{album_id}/tracks?offset={offset}&limit=50"
-            response = requests.get(
-                url=query,
-                headers={
-                    "Content-Type": "application/json",
-                    "Authorization": f'Bearer {token}'
-                }
-            )
-
-
-            results = response.json()
+            if (offset == 0):
+                results = album_data_response['tracks']
+            else:
+                query = f"https://api.spotify.com/v1/albums/{album_id}/tracks?offset={offset}&limit=50"
+                response = requests.get(
+                    url=query,
+                    headers={
+                        "Content-Type": "application/json",
+                        "Authorization": f'Bearer {token}'
+                    }
+                )
+                results = response.json()
 
             if "items" not in results or not results["items"]:
                 return
