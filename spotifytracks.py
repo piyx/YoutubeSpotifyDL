@@ -39,6 +39,30 @@ class SpotifyTracks:
         except Exception as e:
             print(e)
             return None
+    
+    def get_cleaned_track_data_from_album_data(self, item: dict, album_data:dict) -> Union[Song, None]:
+        ''' Get required useful information from the results
+        Eg: Title, artist, album, imgurl
+
+        Parameters:
+            - item: json/dictionary containing track data
+            - album_data: json/dictionary containing album data
+        '''
+        try:
+            track = item
+            album = album_data['name']
+            artist = album_data['artists'][0]['name']
+            title = track['name']
+            imgurl = album_data['images'][0]['url']
+            return Song(vidurl=None,
+                        title=title,
+                        artist=artist,
+                        album=album,
+                        imgurl=imgurl)
+
+        except Exception as e:
+            print(e)
+            return None
 
     def get_playlist_tracks(self, playlist_id: str, limit: int = None):
         ''' Get a list of tracks of a playlist.
@@ -76,6 +100,55 @@ class SpotifyTracks:
                     return
 
             offset += 50
+
+    def get_album_tracks(self, album_id:str, limit:int = None):
+        ''' Get a list of tracks of a playlist.
+
+        Parameters:
+            - playlist_id: the id of the playlist
+        '''
+        album_query = f"https://api.spotify.com/v1/albums/{album_id}"
+        response = requests.get(
+            url=album_query,
+            headers={
+                "Content-Type": "application/json",
+                "Authorization": f'Bearer {token}'
+            }
+        )
+        album_data_response = response.json()
+        offset = 0
+        if limit is None:
+            limit = 10000
+        fetched = 0
+        while offset < limit:
+            if (offset == 0):
+                results = album_data_response['tracks']
+            else:
+                query = f"https://api.spotify.com/v1/albums/{album_id}/tracks?offset={offset}&limit=50"
+                response = requests.get(
+                    url=query,
+                    headers={
+                        "Content-Type": "application/json",
+                        "Authorization": f'Bearer {token}'
+                    }
+                )
+                results = response.json()
+
+            if "items" not in results or not results["items"]:
+                return
+
+            if not response.ok:
+                break
+
+            for item in results['items']:
+                fetched += 1
+                yield self.get_cleaned_track_data_from_album_data(item, album_data_response)
+
+                if fetched >= limit:
+                    return
+
+            offset += 50
+
 
     def get_user_saved_tracks(self, limit: int = None):
         ''' Get a list of the user saved tracks.
