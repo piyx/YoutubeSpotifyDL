@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 # Declare variables to be available to Docker.
 export SPOTIFY_USER_ID="${SPOTIFY_USER_ID}"
