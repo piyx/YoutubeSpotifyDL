@@ -1,8 +1,8 @@
 pafy==0.5.5
 mutagen==1.45.1
-spotipy==2.16.1
+spotipy==2.19.0
 requests==2.25.0
-python-dotenv
+python-dotenv==0.19.1
 PyInquirer==1.0.3
-ytmusicapi==0.12.2
-youtube-dl
+ytmusicapi==0.19.3
+youtube-dl==2021.6.6
