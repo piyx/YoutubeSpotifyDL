@@ -1,7 +1,8 @@
 import re
 import os
 
-import pafy
+# import pafy
+from pytube import YouTube as youtube_dl;
 import requests
 from mutagen.mp4 import MP4, MP4Cover
 
@@ -9,10 +10,17 @@ from utils import Song
 from youtube import Youtube
 
 
-def download_song_from_yt(vid_url: str, song_name: str) -> None:
+def download_song_from_yt(vid_url: str, song_name: str, song: Song) -> None:
     """Download song in the current directory and rename it"""
-    vid = pafy.new(vid_url)
-    vid.getbestaudio(preftype="m4a").download(f"{song_name}.m4a")
+    # vid = pafy.new(vid_url)
+    # vid.getbestaudio(preftype="m4a").download(f"{song_name}.m4a")
+    
+    def completed(*args):
+        print(f"Downloaded {song_name}");
+        addtags(os.path.join(os.getcwd(), song_name+".m4a"), song);
+    vid = youtube_dl(vid_url, on_complete_callback=completed);
+    ys = vid.streams.filter(only_audio=True, file_extension='mp4').last();
+    ys.download(output_path=os.getcwd(), filename=song_name+".m4a");
 
 
 def addtags(songpath: str, song: Song) -> None:
@@ -46,8 +54,8 @@ def download(song: Song) -> None:
             print(f"Skipping {song_name} : Already Downloaded")
             return
 
-        download_song_from_yt(song.vidurl, song_name)
-        addtags(song_path, song)
+        download_song_from_yt(song.vidurl, song_name, song)
+        # addtags(song_path, song)
     except Exception as e:
         if os.path.exists(song_path):
             os.remove(song_path)
