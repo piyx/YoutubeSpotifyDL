@@ -5,4 +5,4 @@ python-dotenv==0.19.1
 PyInquirer==1.0.3
 ytmusicapi==0.19.3
 youtube-dl==2021.6.6
-pytube==11.0.1
+pytube==11.0.2
