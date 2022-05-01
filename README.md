@@ -28,13 +28,25 @@ Set the `SPOTIPY_CLIENT_ID` AND `SPOTIPY_CLIENT_SECRET` values.
 
 ## How to run
 
-1. Clone the project  
-`git clone https://github.com/piyx/YoutubeSpotifyDL.git`  
-2. Navigate to the project directory. The path should look like  
-`../../YoutubeSpotifyDL`
-3. Install Dependencies  
-`pip install -r requirements.txt`
-4. Install the package locally  
-`pip install .`
-5. Run main.py inside ytspdl folder  
-`python ytspdl/main.py`
+### NOTE: Needs python 3.10 or above to run.
+
+#### 1. Clone the project  
+```
+git clone https://github.com/piyx/YoutubeSpotifyDL.git
+```  
+#### 2. Navigate to the project directory. The path should look like  
+```
+../../YoutubeSpotifyDL
+```
+#### 3. Install Dependencies  
+```
+pip install -r requirements.txt
+```
+#### 4. Install the package locally  
+```
+pip install .
+```
+#### 5. Run main.py inside ytspdl folder  
+```
+python ytspdl/main.py
+```
