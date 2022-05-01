@@ -4,7 +4,7 @@ Youtube and Spotify downloader
 
 ## Example
 
-![](images/example.mp4)
+https://user-images.githubusercontent.com/82235530/166157330-1ff1f26e-5feb-4b45-b232-b8e0f41a3520.mp4
 
 ## Setup
 
