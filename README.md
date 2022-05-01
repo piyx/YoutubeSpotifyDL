@@ -4,56 +4,37 @@ Youtube and Spotify downloader
 
 ## Example
 
-![](imgs/example.gif)
+![](images/example.mp4)
 
 ## Setup
 
 1.Create an app: https://developer.spotify.com/dashboard/applications
 
-![](imgs/setup.png)
+![](images/setup.png)
 
-2.Copy the Client id and client secret
+2.Copy the Client id and client secret and paste the values in `.env file`
 
-![](imgs/copy.png)
+![](images/copy.png)
 
 3.Set redirect uri to http://localhost:8888/callback
 
-![](imgs/redirecturi.png)
+![](images/redirecturi.png)
 
-### Setting Environment Variables (Windows)
-
-`setx SPOTIFY_USER_ID your_user_id`  
-`setx SPOTIFY_CLIENT_ID your_client_id`  
-`setx SPOTIFY_CLIENT_SECRET your_client_secret`  
-`setx SPOTIFY_REDIRECT_URI 'http://localhost:8888/callback'`
-
-Alternatively, if you want to run this program from the current directory, you could use an environment file `.env` and load the credentials from there.
+## Setting Environment Variables
 
 Edit the `.env` file and set the credentials.
+Set the `SPOTIPY_CLIENT_ID` AND `SPOTIPY_CLIENT_SECRET` values.
 
-## Dependencies
 
-To install all modules run `pip install -r requirements.txt`
+## How to run
 
-## Usage
-
-`python main.py`
-
-## Sample Output
-
-![](imgs/terminal.png)
-
-## Result
-
-![](imgs/folder.png)
-![](imgs/musicplayer.png)
-
-## How it works
-
-```
-* Program Gets the deatils of the songs from spotify api (for spotify songs)
-  and youtube music api (for youtube songs)
-* It then searches the song on youtube and extracts the youtube song url
-* The song is then downloaded as m4a from youtube using pafy module
-* Metadata are added to the m4a song (Artist, title, album, album art image)
-```
+1. Clone the project  
+`git clone https://github.com/piyx/YoutubeSpotifyDL.git`  
+2. Navigate to the project directory. The path should look like  
+`../../YoutubeSpotifyDL`
+3. Install Dependencies  
+`pip install -r requirements.txt`
+4. Install the package locally  
+`pip install .`
+5. Run main.py inside ytspdl folder  
+`python ytspdl/main.py`
