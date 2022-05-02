@@ -16,7 +16,7 @@ https://user-images.githubusercontent.com/82235530/166157330-1ff1f26e-5feb-4b45-
 #### 2. Set Environment Variavles
 <big><pre>
 Edit the [.env](./.env) file and set the credentials.
-Set the **SPOTIPY_CLIENT_ID** AND **SPOTIPY_CLIENT_SECRET** values.
+Set the *SPOTIPY_CLIENT_ID* AND *SPOTIPY_CLIENT_SECRET* values.
 </pre></big>
 
 #### 3. Clone the project  
