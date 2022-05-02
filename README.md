@@ -36,7 +36,7 @@ pip install -r requirements.txt
 
 #### 6. Install the package locally.
 ```cmd
-pip install .
+pip install -e .
 ```
 
 #### 7. Run main.py inside ytspdl folder  
