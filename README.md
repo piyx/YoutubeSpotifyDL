@@ -12,10 +12,7 @@ https://user-images.githubusercontent.com/82235530/166157330-1ff1f26e-5feb-4b45-
 
 ## How to run
 1. Create a Spotify App.  
-
-<big><pre>
-[See how to create and setup a spotify](./SETUP.md)
-</pre></big>
+[See how to create and setup a spotify app](./SETUP.md)
 
 2. Set Environment Variavles
 ```
