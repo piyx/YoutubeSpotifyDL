@@ -11,7 +11,7 @@ class MusicService(ABC):
         ...
     
     @abstractmethod
-    def get_liked_songs(self) -> list[Song]:
+    def get_liked_songs(self, limit: int = None) -> list[Song]:
         ...
 
     @abstractmethod
